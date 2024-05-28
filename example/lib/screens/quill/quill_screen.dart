@@ -126,9 +126,11 @@ class _QuillScreenState extends State<QuillScreen> {
           ),
           IconButton(
             tooltip: 'Print to log',
-            onPressed: () {
+            onPressed: () async {
+              final base64 =
+                  await _controller.document.toDelta().tobase64Json();
               print(
-                jsonEncode(_controller.document.toDelta().toJson()),
+                jsonEncode(base64),
               );
               ScaffoldMessenger.of(context).showText(
                 'The quill delta json has been printed to the log.',

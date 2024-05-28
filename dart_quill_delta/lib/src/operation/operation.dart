@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:collection/collection.dart';
+import 'package:dart_quill_delta/utils/utils.dart';
 import 'package:quiver/core.dart';
 
 /// Decoder function to convert raw `data` object into a user-defined data type.
@@ -91,6 +94,24 @@ class Operation {
   /// Returns JSON-serializable representation of this operation.
   Map<String, dynamic> toJson() {
     final json = {key: value};
+    if (_attributes != null) json[Operation.attributesKey] = attributes;
+    return json;
+  }
+
+  /// Returns JSON-serializable representation of this operation.
+  /// With converting local images to base64 images
+  Future<Map<String, dynamic>> toBase64Json() async {
+    final json = {key: value};
+    if (value is Map) {
+      if ((value as Map).containsKey('image')) {
+        bool isFile = await isfilePath(value['image'].toString());
+        if (isFile) {
+          String path = value['image'];
+          value['image'] =
+              'data:image/png;base64,${base64Encode(await File(path).readAsBytes())}';
+        }
+      }
+    }
     if (_attributes != null) json[Operation.attributesKey] = attributes;
     return json;
   }

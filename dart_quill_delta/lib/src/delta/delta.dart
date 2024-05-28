@@ -125,6 +125,18 @@ class Delta {
   List<Map<String, dynamic>> toJson() =>
       toList().map((operation) => operation.toJson()).toList();
 
+  /// Returns JSON-serializable version of this delta.
+  /// with converting local images to base64
+  Future<List<Map<String, dynamic>>> tobase64Json() async {
+    List<Operation> list = toList();
+    List<Map<String, dynamic>> jsonList = [];
+    for (var item in list) {
+      final json = await item.toBase64Json();
+      jsonList.add(json);
+    }
+    return Future.value(jsonList);
+  }
+
   /// Returns `true` if this delta is empty.
   bool get isEmpty => operations.isEmpty;
 

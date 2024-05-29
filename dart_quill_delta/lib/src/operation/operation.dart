@@ -108,7 +108,7 @@ class Operation {
         if (isFile) {
           String path = value['image'];
           value['image'] =
-              'data:image/png;base64,${base64Encode(await File(path).readAsBytes())}';
+              'data:image/jpeg;base64,${base64Encode(await File(path).readAsBytes())}';
         }
       }
     }
